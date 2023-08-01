@@ -10,6 +10,7 @@ var pdf2img = require('pdf-img-convert');
 const multer = require("multer");
 const Tesseract = require('tesseract.js');
 const fs = require('fs');
+const path = require("path");
 const { createWorker } = Tesseract;
 
 var app = express();
@@ -102,13 +103,14 @@ function extractKeyValuePairsFromText(text) {
   try {
     const resultJSON = createJSONFromText(text);
 
-    // Write the JSON result to a file
     // fs.writeFileSync("./repo/json/affa-cetak-merek" + "-"+ Date.now() +".json", JSON.stringify(resultJSON, null, 2));
     return resultJSON
   } catch (error) {
     console.error('Error occurred:', error);
   }
 }
+
+app.use('/repo', express.static(path.join(__dirname, 'repo')))
 
 app.post("/pdf-to-img",async (req, res) => {
   await upload(req, res, err => {
@@ -125,7 +127,7 @@ app.post("/pdf-to-img",async (req, res) => {
           if (error) { console.error("Error: " + error); }
         }); //writeFile
       } // for
-      res.json(dataImage)
+      res.json({pdf: req.file?.path , image: dataImage})
     })();
   })
 })
