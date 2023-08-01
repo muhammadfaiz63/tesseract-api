@@ -30,7 +30,6 @@
     "pdf-lib": "^1.17.1",
     "pdf-poppler": "^0.2.1",
     "pdf-table-extractor": "^1.0.3",
-    "pdf2json": "^3.0.4",
     "pdfjs": "^2.5.2",
     "socket.io": "^2.3.0",
     "tesseract.js": "^4.1.1",
