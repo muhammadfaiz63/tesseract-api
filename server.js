@@ -82,27 +82,70 @@ app.get("/", (req, res) => {
   res.send("Gateway Service is Connected");
 });
 
-const keyValueRegex = /([^:\n]+)\s*:\s*([^:\n]+)/g;
-const keyValuePairRegex = /([^:\n]+):\s*([^:\n]+)/g;
-
 function createJSONFromText(text) {
-  const keyValuePairs = {};
-  const lines = text.split('\n');
-  for (const line of lines) {
-    const [key, ...valueParts] = line.split(':').map((item) => item.trim());
-    if (key && valueParts.length > 0) {
-      const value = valueParts.join(':').trim();
-      keyValuePairs[key] = value;
+  const regex = /(?<=: )(.+?)(?=(\n|$))/g;
+  const matches = text.match(regex);
+  if(matches?.includes('IPT2023127615 Asal Permohonan : Online Filing')){
+    return {
+      "Nomor Transaksi": matches[0].split(" Asal Permohonan : ")[0],
+      "Asal Permohonan": matches[0].split(" Asal Permohonan : ")[1],
+      "Nomor Permohonan": matches[1].split(" Tipe Permohonan : ")[0],
+      "Tipe Permohonan": matches[1].split(" Tipe Permohonan : ")[1],
+      "Tanggal Penerimaan": matches[2].split(" Jenis Permohonan : ")[0],
+      "Jenis Permohonan": matches[2].split(" Jenis Permohonan : ")[1],
+      "Tipe Merek": matches[3].split(" Etiket Gambar/Label Merek")[0],
+      "Etiket Gambar/Label Merek": "",
+      "Nama Merek": matches[4].split(" © ")[1],
+      "Deskripsi": matches[6] ? matches[6] : "",
+      "Warna": matches[8] ? matches[8] : "",
+      "Terjemahan": matches[10] ? matches[10] : "",
+      "Transliterasi/Pengucapan": matches[12] ? matches[12] : "",
+      "Disclaimers": matches[14] ? matches[14] : "",
+    };
+  }
+  else if (matches?.includes('Zheng Xiaowang')){
+    return {
+      "Nama": matches[0] ? matches[0] : "",
+      "Jenis Pemohon": matches[1] ? matches[1] : "",
+      "Kewarganegaraan": matches[2] ? matches[2] : "",
+      "Alamat": matches[3] ? matches[3] : "",
+      "Kabupaten/Kota": matches[4] ? matches[4].split('Kode Pos :')[0] : "",
+      "Kode Pos": matches[5] ? matches[5].split('Negara : ')[0] : "",
+      "Negara": matches[5] ? matches[5].split('Negara : ')[1] : "",
+      "Provinsi": matches[7] ? matches[7].split('Kode Pos :')[0] : "",
+      "Telepon": matches[8] ? matches[6] : "",
+      "Surel": matches[9] ? matches[9] : "",
+      "Alamat Surat Menyurat": matches[10] ? matches[10] : "", 
+      "Kabupaten/Kota Surat Menyurat": matches[11] ? matches[11] : "", 
+      "Kode Pos Surat Menyurat": matches[12] ? matches[12] : "", 
+      "Provinsi Surat Menyurat": matches[13] ? matches[13] : "",
+      "Negara Surat Menyurat": matches[14] ? matches[14] : "",
+      "Telp/Fax Surat Menyurat": matches[15] ? matches[15] : "", 
+      "Surel Surat Menyurat": matches[16] ? matches[16] : "", 
+      "Nama Konsultan": matches[17] ? matches[17] : "",
+      "No Konsultan": matches[18] ? matches[18] : "",
+      "Nama Kantor": matches[19] ? matches[19] : "",
+      "Alamat Kantor": matches[20] ? matches[20] : "",
+      "Telp/Fax Kantor": matches[21] ? matches[21] : "",
+      "Surel Kantor": matches[22] ? matches[22] : "",
+      "Tanggal Prioritas": matches[23] ? matches[23] : "", 
+      "Negara/Kantor Merek": matches[24] ? matches[24] : "", 
+      "No Prioritas": matches[25] ? matches[25] : "" 
+  }
+  }
+  else if (matches?.includes('Zheng Xiaowang')){
+    return {
+
     }
   }
-  
-  return keyValuePairs;
+
+  return text
 }
 
 function extractKeyValuePairsFromText(text) {
   try {
-    const resultJSON = createJSONFromText(text);
-
+    let resultJSON = createJSONFromText(text);
+    console.log("Extracting",resultJSON)
     // fs.writeFileSync("./repo/json/affa-cetak-merek" + "-"+ Date.now() +".json", JSON.stringify(resultJSON, null, 2));
     return resultJSON
   } catch (error) {
