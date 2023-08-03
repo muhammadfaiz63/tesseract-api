@@ -244,7 +244,7 @@ app.post("/ocr",async (req, res) => {
   res.json(datasend);
 })
 
-const port = process.env.PORT || 1111;
+const port = process.env.PORT || 1112;
 
 var server = require("http").createServer(app);
 
