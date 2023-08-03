@@ -114,7 +114,7 @@ function createJSONFromText(text) {
       "Negara": matches[5] ? matches[5].split('Negara : ')[1] : "",
       "Provinsi": matches[7] ? matches[7].split('Kode Pos :')[0] : "",
       "Telepon": matches[8] ? matches[6] : "",
-      "Surel": matches[9] ? matches[9] : "",
+      "Surel": matches[9] ? matches[9].split('No Konsultan : ')[0] : "",
       "Alamat Surat Menyurat": matches[10] ? matches[10] : "", 
       "Kabupaten/Kota Surat Menyurat": matches[11] ? matches[11] : "", 
       "Kode Pos Surat Menyurat": matches[12] ? matches[12] : "", 
@@ -123,7 +123,7 @@ function createJSONFromText(text) {
       "Telp/Fax Surat Menyurat": matches[15] ? matches[15] : "", 
       "Surel Surat Menyurat": matches[16] ? matches[16] : "", 
       "Nama Konsultan": matches[17] ? matches[17] : "",
-      "No Konsultan": matches[18] ? matches[18] : "",
+      "No Konsultan": matches[18] ? matches[18] : matches[9] ? matches[9].split('No Konsultan : ')[1] : "",
       "Nama Kantor": matches[19] ? matches[19] : "",
       "Alamat Kantor": matches[20] ? matches[20] : "",
       "Telp/Fax Kantor": matches[21] ? matches[21] : "",
@@ -134,48 +134,69 @@ function createJSONFromText(text) {
   }
   }
   else if (text?.includes("Data Kelas (Class)")){
+
+    const regex1 = /Kelas Uraian Barang dan\/atau Jasa\n\(Class\) \(Description of Goods\/Services\)\n\n([\s\S]*?)\n\n/;
+    const regex2 = /Dokumen Lampiran \(Attachment\)\n\n([\s\S]*?)(\n\n|$)/;
+
+    const matches1 = text.match(regex1);
+    const matches2 = text.match(regex2);
+
     return {
-      "Uraian Barang dan/atau jasa": "Alat Meteran; Pensil pengetesan (pensil uji) untuk elektrik; Timbangan; alat pengukur jarak; alat pengukur\npanjang; alat ukur tinggi badan; barometer; cincin kalibrasi; instrumen untuk mengukur panjang; jangka\nlengkung; kaliper geser; mengukur penguasa; mesin penimbang; penggaris [alat ukur]; pengukur;\npengukur level; perangkat pengukur; pita pengukur; tingkat surveyor; ukuran",
-      "Dokumen Lampiran": "Dokumen Pendukung , Surat Kuasa Konsultan KI, Bermaterai Cukup, Tanda Tangan Digital Kuasa, Tanda Tangan Digital Pemohon, Nama Pemohon Tambahan, Gambar Merek Tambahan",
+      "Uraian Barang dan/atau Jasa": matches1[1].trim().replace(/\n/g, ' '),
+      "Dokumen Lampiran": matches2[1]
+      .trim()
+      .replace(/\n\n/g, ', ')
+      .replace(/"/g, '')
+      .replace(/"/g, ''),
       "Nama Pemohon Tambahan": "",
-      "Gambar Merek Tambahan": ""
-    }
+      "Gambar Merek Tambahan": "",
+    };
   }
   else if (text?.includes("Tanda Tangan Pemohon")){
+    const regexTandaTangan = /Tanda Tangan Pemohon \/ Kuasa \(Applicant \/ Representative Signature\)\n\((.*?)\)/;
+    const regexTempatTanggal = /Tempat dan Tanggal \(Place and Date\) : (.*?)\n/;
+
+    const tandaTanganMatches = text.match(regexTandaTangan);
+    const tempatTanggalMatches = text.match(regexTempatTanggal);
     return {
-      "Tanda Tangan Pemohon / Kuasa": "",
-      "Tempat dan Tanggal": "Jakarta, 21-07-2023"
+      "Tanda Tangan Pemohon / Kuasa": tandaTanganMatches[1].trim(),
+      "Tempat dan Tanggal": tempatTanggalMatches[1].trim()
     }
   }
   else if(text?.includes("Keputusan Direktur Jenderal Kekayaan Intelektual")){
+
+    const regexData = /Lampiran Il\n(.*?)\nNomor : (.*?)\nTanggal : (.*?)\n.*?Merek:\n(.*?)\n.*?Nama Pemohon : (.*?)\n.*?Alamat : (.*?)\n.*?\(([^()]+)\/Owner\)/s;
+
+    const matches = text.match(regexData);
+
     return {
-      "Lampiran II": "Keputusan Direktur Jenderal Kekayaan Intelektual",
-      "Nomor": "HKI-02.HI.06.01 Tahun 2017 tentang Formulir Permohonan Merek",
-      "Tanggal": "03 Maret 2017",
-      "Merek": "Label Merek",
-      "Nama Pemohon": "Zheng Xiaowang",
-      "Alamat": "No. 24, Group 4, Yuncun, Jiulongling Town, Shaodong County,Hunan Province, China",
-      "Owner": "Zheng Xinowang",
+      "Lampiran II": matches[1].trim(),
+      "Nomor": matches[2].trim(),
+      "Tanggal": matches[3].trim(),
+      "Merek": matches[4].trim(),
+      "Nama Pemohon": matches[5].trim(),
+      "Alamat": matches[6].trim(),
+      "Owner": matches[7].trim(),
     }
   }
   else if(text.includes("we the undersigned")){
-    return {
-      "I/we the undersigned": "Zheng Xiaowang",
-      "Acting to this present as": "Owner",
-      "Of and therefore on behalf of": "",
-      "company organized under the Laws of": "China",
-      "Residing/having principal office at": "No. 24, Group 4, Yuncun, Jiulongling Town, Shaodong County, Hunan Province, China",
-      "In this case electing legal domicile at the office of proxies mentioned below": "",
-      "of": "Emirsyah Dinar , Farizsyah Alam",
-      "AFFA Intellectual Property Rights": "Graha Pratama Building Lt. 15, JI. M. T. Haryono Kav. 15, Jakarta 12810, Indonesia",
-      "Either jointly or severally to act on my/our behalf with full power of substitution in all trademark proceeding at The Trademark Registry\nin Indonesia, to take every necessary action in respect of": "",
-      "Filing an application for registration of trade mark / service mark of" : "X",
-      "Filing an application for renewal of trade mark / service mark registration of": "X",
-      "Recordal of Assignment/change of name/address or abandonment of trade mark/ service mark of": "",
-      "Change of proxy in relation to the application for registration of": "",
-      "Filing a request for judicial review against rejection of trade mark application": "",
-      "Date": "",
-      "Signature": "Zheng Xiaowang"
+   return {
+    "I/we the undersigned": "Zheng Xiaowang",
+    "Acting to this present as": "Owner",
+    "Of and therefore on behalf of": "",
+    "company organized under the Laws of": "China",
+    "Residing/having principal office at": "No. 24, Group 4, Yuncun, Jiulongling Town, Shaodong County, Hunan Province, China",
+    "In this case electing legal domicile at the office of proxies mentioned below": "",
+    "of": "Emirsyah Dinar , Farizsyah Alam",
+    "AFFA Intellectual Property Rights": "Graha Pratama Building Lt. 15, JI. M. T. Haryono Kav. 15, Jakarta 12810, Indonesia",
+    "Either jointly or severally to act on my/our behalf with full power of substitution in all trademark proceeding at The Trademark Registry\nin Indonesia, to take every necessary action in respect of": "",
+    "Filing an application for registration of trade mark / service mark of" : "X",
+    "Filing an application for renewal of trade mark / service mark registration of": "X",
+    "Recordal of Assignment/change of name/address or abandonment of trade mark/ service mark of": "",
+    "Change of proxy in relation to the application for registration of": "",
+    "Filing a request for judicial review against rejection of trade mark application": "",
+    "Date": "",
+    "Signature": "Zheng Xiaowang"
     }
   }
 }
