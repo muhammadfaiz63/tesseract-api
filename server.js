@@ -104,6 +104,9 @@ function createJSONFromText(text) {
     };
   }
   else if (text?.includes('Nama Konsultan')){
+    const patternSurel = /Surel\s*1\s*(\S+)/;
+    const surel = text.match(patternSurel);
+
     return {
       "Nama": matches[0] ? matches[0] : "",
       "Jenis Pemohon": matches[1] ? matches[1] : "",
@@ -113,8 +116,8 @@ function createJSONFromText(text) {
       "Kode Pos": matches[5] ? matches[5].split('Negara : ')[0] : "",
       "Negara": matches[5] ? matches[5].split('Negara : ')[1] : "",
       "Provinsi": matches[7] ? matches[7].split('Kode Pos :')[0] : "",
-      "Telepon": matches[8] ? matches[6] : "",
-      "Surel": matches[9] ? matches[9].split('No Konsultan : ')[0] : "",
+      "Telepon": matches[6] ? matches[6] : "",
+      "Surel": surel[1],
       "Alamat Surat Menyurat": matches[10] ? matches[10] : "", 
       "Kabupaten/Kota Surat Menyurat": matches[11] ? matches[11] : "", 
       "Kode Pos Surat Menyurat": "", 
@@ -127,11 +130,11 @@ function createJSONFromText(text) {
       "Nama Kantor": matches[19] ? matches[19] : "",
       "Alamat Kantor": matches[20] ? matches[20] : "",
       "Telp/Fax Kantor": matches[12] ? matches[12] : "",
-      "Surel Kantor": matches[22] ? matches[22] : "",
+      "Surel Kantor": surel[1],
       "Tanggal Prioritas": matches[23] ? matches[23] : "", 
       "Negara/Kantor Merek": matches[24] ? matches[24] : "", 
       "No Prioritas": matches[25] ? matches[25] : "" 
-  }
+    }
   }
   else if (text?.includes("Data Kelas (Class)")){
 
