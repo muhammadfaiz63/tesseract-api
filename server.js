@@ -85,7 +85,6 @@ app.get("/", (req, res) => {
 function createJSONFromText(text) {
   const regex = /(?<=: )(.+?)(?=(\n|$))/g;
   const matches = text.match(regex);
-  console.log("text",text)
   if(matches?.includes('IPT2023127615 Asal Permohonan : Online Filing')){
     return {
       "Nomor Transaksi": matches[0].split(" Asal Permohonan : ")[0],
@@ -184,7 +183,6 @@ function createJSONFromText(text) {
 function extractKeyValuePairsFromText(text) {
   try {
     let resultJSON = createJSONFromText(text);
-    console.log("Extracting",resultJSON)
     // fs.writeFileSync("./repo/json/affa-cetak-merek" + "-"+ Date.now() +".json", JSON.stringify(resultJSON, null, 2));
     return resultJSON
   } catch (error) {
