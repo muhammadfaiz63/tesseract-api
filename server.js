@@ -103,7 +103,7 @@ function createJSONFromText(text) {
       "Disclaimers": matches[14] ? matches[14] : "",
     };
   }
-  else if (matches?.includes('Alamat Surat Menyurat')){
+  else if (text?.includes('Nama Konsultan')){
     return {
       "Nama": matches[0] ? matches[0] : "",
       "Jenis Pemohon": matches[1] ? matches[1] : "",
@@ -176,7 +176,7 @@ function createJSONFromText(text) {
       "Filing a request for judicial review against rejection of trade mark application": "",
       "Date": "",
       "Signature": "Zheng Xiaowang"
-  }
+    }
   }
 }
 
