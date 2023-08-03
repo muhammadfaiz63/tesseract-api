@@ -85,7 +85,7 @@ app.get("/", (req, res) => {
 function createJSONFromText(text) {
   const regex = /(?<=: )(.+?)(?=(\n|$))/g;
   const matches = text.match(regex);
-  if(matches?.includes('IPT2023127615 Asal Permohonan : Online Filing')){
+  if(text?.includes('Nomor Transaksi')){
     return {
       "Nomor Transaksi": matches[0].split(" Asal Permohonan : ")[0],
       "Asal Permohonan": matches[0].split(" Asal Permohonan : ")[1],
@@ -158,7 +158,7 @@ function createJSONFromText(text) {
       "Owner": "Zheng Xinowang",
     }
   }
-  else{
+  else if(text.includes("we the undersigned")){
     return {
       "I/we the undersigned": "Zheng Xiaowang",
       "Acting to this present as": "Owner",
