@@ -9,7 +9,6 @@ const axios = require('axios')
 const { PDFDocument, rgb } = require('pdf-lib');
 const Tesseract = require('tesseract.js');
 const fs = require('fs');
-const { extractPDF } = require('pdf-extraction');
 const { createWorker } = Tesseract;
 
 var app = express();
