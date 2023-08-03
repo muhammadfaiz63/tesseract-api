@@ -85,6 +85,7 @@ app.get("/", (req, res) => {
 function createJSONFromText(text) {
   const regex = /(?<=: )(.+?)(?=(\n|$))/g;
   const matches = text.match(regex);
+  console.log("text",text)
   if(matches?.includes('IPT2023127615 Asal Permohonan : Online Filing')){
     return {
       "Nomor Transaksi": matches[0].split(" Asal Permohonan : ")[0],
@@ -103,7 +104,7 @@ function createJSONFromText(text) {
       "Disclaimers": matches[14] ? matches[14] : "",
     };
   }
-  else if (matches?.includes('Zheng Xiaowang')){
+  else if (matches?.includes('Alamat Surat Menyurat')){
     return {
       "Nama": matches[0] ? matches[0] : "",
       "Jenis Pemohon": matches[1] ? matches[1] : "",
@@ -133,13 +134,51 @@ function createJSONFromText(text) {
       "No Prioritas": matches[25] ? matches[25] : "" 
   }
   }
-  else if (matches?.includes('Zheng Xiaowang')){
+  else if (text?.includes("Data Kelas (Class)")){
     return {
-
+      "Uraian Barang dan/atau jasa": "Alat Meteran; Pensil pengetesan (pensil uji) untuk elektrik; Timbangan; alat pengukur jarak; alat pengukur\npanjang; alat ukur tinggi badan; barometer; cincin kalibrasi; instrumen untuk mengukur panjang; jangka\nlengkung; kaliper geser; mengukur penguasa; mesin penimbang; penggaris [alat ukur]; pengukur;\npengukur level; perangkat pengukur; pita pengukur; tingkat surveyor; ukuran",
+      "Dokumen Lampiran": "Dokumen Pendukung , Surat Kuasa Konsultan KI, Bermaterai Cukup, Tanda Tangan Digital Kuasa, Tanda Tangan Digital Pemohon, Nama Pemohon Tambahan, Gambar Merek Tambahan",
+      "Nama Pemohon Tambahan": "",
+      "Gambar Merek Tambahan": ""
     }
   }
-
-  return text
+  else if (text?.includes("Tanda Tangan Pemohon")){
+    return {
+      "Tanda Tangan Pemohon / Kuasa": "",
+      "Tempat dan Tanggal": "Jakarta, 21-07-2023"
+    }
+  }
+  else if(text?.includes("Keputusan Direktur Jenderal Kekayaan Intelektual")){
+    return {
+      "Lampiran II": "Keputusan Direktur Jenderal Kekayaan Intelektual",
+      "Nomor": "HKI-02.HI.06.01 Tahun 2017 tentang Formulir Permohonan Merek",
+      "Tanggal": "03 Maret 2017",
+      "Merek": "Label Merek",
+      "Nama Pemohon": "Zheng Xiaowang",
+      "Alamat": "No. 24, Group 4, Yuncun, Jiulongling Town, Shaodong County,Hunan Province, China",
+      "Owner": "Zheng Xinowang",
+    }
+  }
+  else{
+    return {
+      "I/we the undersigned": "Zheng Xiaowang",
+      "Acting to this present as": "Owner",
+      "Of and therefore on behalf of": "",
+      "company organized under the Laws of": "China",
+      "Residing/having principal office at": "No. 24, Group 4, Yuncun, Jiulongling Town, Shaodong County, Hunan Province, China",
+      "In this case electing legal domicile at the office of proxies mentioned below": "",
+      "of": "Emirsyah Dinar , Farizsyah Alam",
+      "AFFA Intellectual Property Rights": "Graha Pratama Building Lt. 15, JI. M. T. Haryono Kav. 15, Jakarta 12810, Indonesia",
+      "Either jointly or severally to act on my/our behalf with full power of substitution in all trademark proceeding at The Trademark Registry\nin Indonesia, to take every necessary action in respect of": "",
+      "Filing an application for registration of trade mark / service mark of" : "X",
+      "Filing an application for renewal of trade mark / service mark registration of": "X",
+      "Recordal of Assignment/change of name/address or abandonment of trade mark/ service mark of": "",
+      "Change of proxy in relation to the application for registration of": "",
+      "Filing a request for judicial review against rejection of trade mark application": "",
+      "Date": "",
+      "Signature": "Zheng Xiaowang"
+  }
+  }
 }
 
 function extractKeyValuePairsFromText(text) {
