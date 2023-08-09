@@ -243,7 +243,7 @@ app.post("/ocr",async (req, res) => {
   // Function to perform OCR and return a promise
   const performOCR = async (message) => {
     const worker = await createWorker({
-      logger: m => console.log(m)
+      // logger: m => console.log(m)
     });
 
     await worker.loadLanguage('eng');
